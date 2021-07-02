@@ -251,7 +251,6 @@ def simpleRules(GB, n):
         # empty interval index list for this algorithm
         interval_ind_list = []
         
-        
         # empty support list (%) which is the percentage of instances that meet the rule
         support_list = []
         
@@ -259,20 +258,59 @@ def simpleRules(GB, n):
         
         for metafeature in GB[algorithm]:
             
-            for int_val in GB[algorithm][metafeature]['interval_val']:
-                
+            # Get interval values and interval indexes
+            int_val = GB[algorithm][metafeature]['interval_val']
+            int_ind = GB[algorithm][metafeature]['interval_ind']
+            
+            # verify if the interval is non-empty
+            # if not append to each list
+            if int_val:
                 interval_list.append(int_val)
                 metafeature_list.append(metafeature.replace("feature_", ""))
-            
-            for int_ind in GB[algorithm][metafeature]['interval_ind']:
-                
                 interval_ind_list.append(int_ind)
                 support_list.append(round((len(range(int_ind[0], int_ind[1]+1))/n), 2))
+                    
                 
         Simple_Rules[algorithm] = pd.DataFrame(list(zip(metafeature_list, interval_ind_list, interval_list, support_list)), columns =['Metafeature', 'Index', 'Interval', 'Support'])
         
     return(Simple_Rules)
 
+# This function returns the support for PRD and NRD
+def RD_support(Good_Rules, Bad_Rules, n):
+    for dataset in Good_Rules:
+        for algorithm in Good_Rules[dataset]:
+            print(f"{dataset} {algorithm}")
+
+            df_good = Good_Rules[dataset][algorithm].sort_values('Support', ascending=False)
+            df_bad = Bad_Rules[dataset][algorithm].sort_values('Support', ascending=False)
+
+            # Turn to list of intervals with indexes
+            list_int_ind_good = list(df_good["Index"])
+            list_int_ind_bad = list(df_bad["Index"])
+
+            list_intervals_good = []
+            list_intervals_bad = []
+
+            # Positive Rule Disjunction (PRD)
+            for int_ind in list_int_ind_good:
+                list_intervals_good.append(list(range(int_ind[0], int_ind[1])))
+
+            # Negative Rule Disjunction (NRD)
+            for int_ind in list_int_ind_bad:
+                list_intervals_bad.append(list(range(int_ind[0], int_ind[1])))
+
+
+            # Union of intervals
+            final_list_good = list(set().union(*list_intervals_good))
+            final_list_bad = list(set().union(*list_intervals_bad))
+
+            support_good = round((len(final_list_good)/n), 2)
+            support_bad = round((len(final_list_bad)/n), 2)
+
+            print("Good: ", support_good, "Bad: ", support_bad, "\n")
+        
+
+# This function is used to lay tables side-by-side in Jupyter-Notebook
 def display_side_by_side(*args,titles=cycle([''])):
     html_str=''
     for df,title in zip(args, chain(titles,cycle(['</br>'])) ):
@@ -281,3 +319,5 @@ def display_side_by_side(*args,titles=cycle([''])):
         html_str+=df.to_html().replace('table','table style="display:inline"')
         html_str+='</td></th>'
     display_html(html_str,raw=True)
+    
+    
