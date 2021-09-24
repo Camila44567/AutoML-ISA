@@ -1,5 +1,5 @@
-# AutoML-ISA
-My master's project on automatically extracting intervals of easy or hard instances for creating hardness rules.
+# IH-AEM
+_Instance Hardness Automatic Extraction Method_
 
 
 ## Getting Started
