@@ -618,7 +618,7 @@ def tune_hyper_params(merge_space, drop_space, df_train, df_metadata_train, df_p
     :param direc: directory where the best parameters will be saved 
     :type direc: str
     
-    :return df_f1: f1 scores of the grid serach for each algorithm
+    :return df_f1: f1 scores of the grid search for each algorithm
     :rtype: pandas.core.frame.DataFrame
     """   
     
@@ -683,7 +683,7 @@ def tune_hyper_params(merge_space, drop_space, df_train, df_metadata_train, df_p
                                average='weighted')
 
                 # Let's append to the temporary list
-                list_f1_temp.append(acc)
+                list_f1_temp.append(f1)
 
             # add the f1 scores to the final f1 score list
             list_f1.append(list_f1_temp)
@@ -698,17 +698,21 @@ def tune_hyper_params(merge_space, drop_space, df_train, df_metadata_train, df_p
     # Get the best f1 scsores and save their respective merge and drop percentages
     df_f1 = pd.DataFrame(list_f1, columns=performance_names)
 
+    list_best_f1 = []
     list_best_merge = []
     list_best_drop = []
 
     for performance in performance_names:
+        
         best_index = df_f1.index[df_f1[performance] == max(df_f1[performance])].tolist()[0]
+        
+        list_best_f1.append(max(df_f1[performance]))
         list_best_merge.append(list_merge_value[best_index])
         list_best_drop.append(list_drop_value[best_index])
     
-    df_best = pd.DataFrame([list_best_merge, list_best_drop], 
+    df_best = pd.DataFrame([list_best_f1, list_best_merge, list_best_drop], 
                            columns=performance_names, 
-                           index=['merge', 'drop'])
+                           index=['f1','merge', 'drop'])
     
     
     df_best.to_csv(f'{direc}/best_hyperparameters.csv', index=False)
