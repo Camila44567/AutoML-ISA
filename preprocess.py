@@ -37,6 +37,14 @@ def split_sets(X, y):
 
 def create_isa_datasets(direc):
     
+        """
+    This function reads a dataset from a given directory and creates its meta-feature, algorithm bin and beta easy datasets. These four sets are split intro train, validations and test sets, and all are saved as .csv in the given directory. 
+    
+    :param direc: directory where datasets will be saved 
+    :type direc: str
+    
+    """   
+    
     file = f"{direc}/data.csv"
     
     # read original features
@@ -48,7 +56,7 @@ def create_isa_datasets(direc):
      'metric': 'logloss', 'perf_threshold': 'auto', 'feat_select': 'x', 'max_n_features': 10, 
      'method': 'mrmr', 'var_filter': True, 'var_threshold': 0, 'hyper_param_optm': True, 
      'hpo_evals': 20, 'hpo_timeout': 90, 'adjust_rotation': True, 'ih_threshold': 0.4, 
-     'ih_purity': 0.55, 'measures_list': ['kDN', 'DCP', 'TD_P', 'TD_U', 'CL', 'CLD', 'N1', 'N2', 'LSC', 'LSR', 'Harmfulness', 'Usefulness', 'F1'],
+     'ih_purity': 0.55, 'measures_list': ['kDN', 'DCP', 'TD_P', 'TD_U', 'CL', 'N1', 'N2', 'LSC', 'LSR', 'Harmfulness', 'Usefulness', 'F1'],
      'algo_list': ['svc_linear', 'svc_rbf', 'random_forest', 'gradient_boosting', 'bagging', 'logistic_regression', 'mlp'], 
      'parameters': {'random_forest': {'n_jobs': -1}, 'bagging': {'n_jobs': -1}, 'dummy': {'strategy': 'prior'}}
     }
