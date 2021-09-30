@@ -646,13 +646,13 @@ def tune_hyper_params(merge_space, drop_space, df_train, df_metadata_train, df_p
             dict_hard_rules = simple_rules(dict_H, len(df_train))
 
             # Let's keep the features that are present in both easy and hard intervals for a given performance measure
-            dict_easy_rules_common, dict_hard_rules_common = common_rules(dict_easy_rules, dict_hard_rules)
+#             dict_easy_rules_common, dict_hard_rules_common = common_rules(dict_easy_rules, dict_hard_rules)
 
             # Let's predict the performance of the validation dataset
             dict_pred = predict(df_performance_val, 
                                 df_metadata_val, 
-                                dict_easy_rules_common, 
-                                dict_hard_rules_common)
+                                dict_easy_rules, 
+                                dict_hard_rules)
 
             # Let's evaluate the performance ruleset
             # Let's get the performance names for the current dataset
