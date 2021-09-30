@@ -27,17 +27,13 @@ def split_sets(X, y):
     train = pd.concat([X_train, y_train], axis=1)
     test = pd.concat([X_test, y_test], axis=1)
     
-    # Reset index
-    train = train.reset_index(drop=True)
-    test = test.reset_index(drop=True)
-    
     return train, test
 
 #########################################################################################################################################################################################################
 
 def create_isa_datasets(direc):
     
-        """
+    """
     This function reads a dataset from a given directory and creates its meta-feature, algorithm bin and beta easy datasets. These four sets are split intro train, validations and test sets, and all are saved as .csv in the given directory. 
     
     :param direc: directory where datasets will be saved 
@@ -106,34 +102,37 @@ def create_isa_datasets(direc):
     # Drop last column (class)
     df_X = df_original.iloc[: , :-1]
     
-    df_train_aux, df_test = split_sets(df_X, df_y)
-    
-    df_train, df_val = split_sets(df_train_aux.iloc[: , :-1], df_train_aux.iloc[: , -1])
+    df_train, df_val  = split_sets(df_X, df_y)
     
     # get indices
     train_idx = df_train.index
-    test_idx = df_test.index
     val_idx = df_val.index
     
     
     
     # Write original, metadata, algorithm_bin and beta_easy for train, test and validation data to .csv
     
+    df_original.to_csv(f'{direc}/original.csv', index=False)
     df_original.iloc[train_idx].to_csv(f'{direc}/train.csv', index=False)
-    df_original.iloc[test_idx].to_csv(f'{direc}/test.csv', index=False)
     df_original.iloc[val_idx].to_csv(f'{direc}/val.csv', index=False)
-
+    
+    df_metadata.to_csv(f'{direc}/metadata.csv', index=False)
     df_metadata.iloc[train_idx].to_csv(f'{direc}/metadata_train.csv', index=False)
-    df_metadata.iloc[test_idx].to_csv(f'{direc}/metadata_test.csv', index=False)
     df_metadata.iloc[val_idx].to_csv(f'{direc}/metadata_val.csv', index=False)
-
+    
+    df_algorithm_bin.to_csv(f'{direc}/algorithm_bin.csv', index=False)
     df_algorithm_bin.iloc[train_idx].to_csv(f'{direc}/algorithm_bin_train.csv', index=False)
-    df_algorithm_bin.iloc[test_idx].to_csv(f'{direc}/algorithm_bin_test.csv', index=False)
     df_algorithm_bin.iloc[val_idx].to_csv(f'{direc}/algorithm_bin_val.csv', index=False)
-
+    
+    df_beta_easy.to_csv(f'{direc}/beta_easy.csv', index=False)
     df_beta_easy.iloc[train_idx].to_csv(f'{direc}/beta_easy_train.csv', index=False)
-    df_beta_easy.iloc[test_idx].to_csv(f'{direc}/beta_easy_test.csv', index=False)
     df_beta_easy.iloc[val_idx].to_csv(f'{direc}/beta_easy_val.csv', index=False)
+    
+    train_idx = pd.DataFrame(train_idx)
+    val_idx = pd.DataFrame(val_idx)
+    
+    train_idx.to_csv(f'{direc}/train_idx.csv', index=False)
+    val_idx.to_csv(f'{direc}/val_idx.csv', index=False)
 
 ############################################################################################
     
