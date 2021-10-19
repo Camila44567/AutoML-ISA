@@ -40,6 +40,7 @@ def create_isa_datasets(direc):
     :type direc: str
     
     """   
+
     
     file = f"{direc}/data.csv"
     
@@ -94,45 +95,11 @@ def create_isa_datasets(direc):
     df_beta_easy = pd.DataFrame(out.data.beta.astype(int), index=idx, columns=['IsBetaEasy'])
     
     
-    # Create train, validation and test datasets
-    
-    # Class
-    df_y = df_original.iloc[: , -1]
-
-    # Drop last column (class)
-    df_X = df_original.iloc[: , :-1]
-    
-    df_train, df_val  = split_sets(df_X, df_y)
-    
-    # get indices
-    train_idx = df_train.index
-    val_idx = df_val.index
-    
-    
-    
-    # Write original, metadata, algorithm_bin and beta_easy for train, test and validation data to .csv
+    # Write original, metadata, algorithm_bin and beta_easy data to .csv
     
     df_original.to_csv(f'{direc}/original.csv', index=False)
-    df_original.iloc[train_idx].to_csv(f'{direc}/train.csv', index=False)
-    df_original.iloc[val_idx].to_csv(f'{direc}/val.csv', index=False)
-    
     df_metadata.to_csv(f'{direc}/metadata.csv', index=False)
-    df_metadata.iloc[train_idx].to_csv(f'{direc}/metadata_train.csv', index=False)
-    df_metadata.iloc[val_idx].to_csv(f'{direc}/metadata_val.csv', index=False)
-    
     df_algorithm_bin.to_csv(f'{direc}/algorithm_bin.csv', index=False)
-    df_algorithm_bin.iloc[train_idx].to_csv(f'{direc}/algorithm_bin_train.csv', index=False)
-    df_algorithm_bin.iloc[val_idx].to_csv(f'{direc}/algorithm_bin_val.csv', index=False)
-    
     df_beta_easy.to_csv(f'{direc}/beta_easy.csv', index=False)
-    df_beta_easy.iloc[train_idx].to_csv(f'{direc}/beta_easy_train.csv', index=False)
-    df_beta_easy.iloc[val_idx].to_csv(f'{direc}/beta_easy_val.csv', index=False)
-    
-    train_idx = pd.DataFrame(train_idx)
-    val_idx = pd.DataFrame(val_idx)
-    
-    train_idx.to_csv(f'{direc}/train_idx.csv', index=False)
-    val_idx.to_csv(f'{direc}/val_idx.csv', index=False)
 
 ############################################################################################
-    
